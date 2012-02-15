@@ -44,11 +44,9 @@ def authentification(utilisateur, mot_de_passe) :
 	lrequete = [urllib2.Request(site_web + page_form), urllib2.Request(site_web + page_post, donnees)]
 
 	# On envoie la requete
-	for requete in lrequete : page = urlOpener.open(requete)
-	retour = page.read()
-	with open("retour.html", 'w') as p : p.write(retour)
-
-	# Analyse du retour
+	for requete in lrequete : urlOpener.open(requete)
+	
+	# Récupération du l'identifiant de l'utilisateur
 	identifiant, = [cookie.value for cookie in cj if cookie.name == "c_user"]
 	
 	return identifiant
@@ -67,8 +65,7 @@ def analyse() :
 	# On envoie la requete
 	page = urlOpener.open(requete)
 	retour = page.read()
-	with open("pokes.html", 'w') as p : p.write(retour)
-
+	
 	# Analyse du retour
 	lpokeur = regex_pokeur.findall(retour)
 	
@@ -98,7 +95,7 @@ def poke(pokeur) :
 	requete = urllib2.Request(site_web + page_pokes_post, donnees)
 	
 	# On envoie la requete
-	page = urlOpener.open(requete)
+	urlOpener.open(requete)
 
 
 ################################################################################
@@ -116,7 +113,6 @@ page_post = "login.php?login_attempt=1"
 page_pokes = "pokes"
 page_pokes_post = "ajax/pokes/poke_inline.php?__a=1"
 
-regex_id = re.compile("")
 regex_pokeur = re.compile("\/ajax\/pokes\/poke_inline\.php\?uid=([0-9]+)")
 utilisateur = {}
 
@@ -134,7 +130,7 @@ lpokeur = analyse()
 
 # Etape III : On poke tout le monde
 if lpokeur :
-	print("Le script va poker {0} en retour...".format(len(lpokeur)))
+	print("Le script va poker {0} personne(s) en retour...".format(len(lpokeur)))
 	for pokeur in lpokeur : poke(pokeur)
 else :
 	print("Personne ne vous à poké.")
